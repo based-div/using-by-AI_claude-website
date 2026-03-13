@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — べいすど</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f2ed;
+      --ink: #1a1714;
+      --accent: #c8502a;
+      --muted: #8a847c;
+      --line: #d6d0c8;
+      --card: #edeae3;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'M PLUS Rounded 1c', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      padding: 3rem 4rem 2rem;
+      border-bottom: 1px solid var(--line);
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .site-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: lowercase;
+      transition: color 0.25s;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 82vh;
+      padding: 6rem 4rem;
+      justify-content: center;
+      gap: 3rem;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeUp 1s 0.2s ease both;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-name {
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-name span {
+      display: block;
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.5em;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-role {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 1.4rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--line);
+      letter-spacing: 0.08em;
+    }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeUp 1s 0.4s ease both;
+    }
+
+    .hero-bio {
+      font-size: 1.08rem;
+      line-height: 2;
+      color: var(--ink);
+      max-width: 38ch;
+    }
+
+    .hero-bio em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-index {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--line);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── SECTION GRID ── */
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-top: 1px solid var(--line);
+    }
+
+    .grid-cell {
+      padding: 3rem 4rem;
+      border-right: 1px solid var(--line);
+      animation: fadeUp 1s ease both;
+      text-align: center;
+    }
+
+    .grid-cell:last-child { border-right: none; }
+
+    .cell-number {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--line);
+      letter-spacing: 0.15em;
+      margin-bottom: 1.8rem;
+    }
+
+    .cell-title {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 1.2rem;
+    }
+
+    .cell-body {
+      font-size: 0.9rem;
+      line-height: 1.9;
+      color: var(--muted);
+    }
+
+    /* ── SKILLS ── */
+    .skills-section {
+      padding: 4rem;
+      border-top: 1px solid var(--line);
+      animation: fadeUp 1s 0.3s ease both;
+      text-align: center;
+    }
+
+    .skills-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .skills-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .skills-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .skill-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      padding: 0.45rem 1rem;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 2px;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      cursor: default;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--bg);
+    }
+
+    /* ── CONTACT ── */
+    .contact-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 2rem;
+      padding: 3rem 4rem;
+      border-top: 1px solid var(--line);
+      animation: fadeUp 1s 0.5s ease both;
+    }
+
+    .contact-text {
+      font-size: 1.8rem;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .contact-text span { color: var(--accent); }
+
+    .contact-links {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contact-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: color 0.25s;
+    }
+
+    .contact-link::after {
+      content: '→';
+      font-size: 0.8em;
+      transition: transform 0.25s;
+    }
+
+    .contact-link:hover { color: var(--accent); }
+    .contact-link:hover::after { transform: translateX(4px); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 1.5rem 4rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--line);
+      letter-spacing: 0.12em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      header, .hero, .skills-section, .contact-section, footer {
+        padding-left: 1.8rem;
+        padding-right: 1.8rem;
+      }
+
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { border-right: none; border-bottom: 1px solid var(--line); padding: 3rem 0; }
+      .hero-right { padding: 3rem 0; }
+
+      .section-grid { grid-template-columns: 1fr; }
+      .grid-cell { border-right: none; border-bottom: 1px solid var(--line); padding: 2.5rem 1.8rem; }
+
+      .contact-section { grid-template-columns: 1fr; gap: 2rem; }
+      .contact-links { align-items: flex-start; }
+
+      nav { gap: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="site-label">Portfolio — 2026</span>
+    <nav>
+      <a href="#about">about</a>
+      <a href="#skills">skills</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="about">
+    <div class="hero-left">
+      <p class="hero-eyebrow">自己紹介 / Introduction</p>
+      <h1 class="hero-name">
+        山田 太郎
+        <span>Yamada Taro</span>
+      </h1>
+      <p class="hero-role">Web Developer &amp; Designer — Tokyo, Japan</p>
+    </div>
+    <div class="hero-right">
+      <p class="hero-index">01 / about</p>
+      <p class="hero-bio">
+        東京を拠点に活動する<em>Webエンジニア</em>。<br>
+        ユーザー体験を最優先に、設計から実装まで<em>一貫して</em>携わります。<br><br>
+        シンプルで美しいインターフェースと、<br>
+        読みやすく保守しやすいコードを大切にしています。
+      </p>
+    </div>
+  </section>
+
+  <!-- INFO GRID -->
+  <div class="section-grid">
+    <div class="grid-cell" style="animation-delay:0.1s">
+      <p class="cell-number">01</p>
+      <h3 class="cell-title">経歴</h3>
+      <p class="cell-body">
+        2018年より都内Web制作会社に勤務。<br>
+        フロントエンドを中心に、<br>
+        バックエンド・インフラまで幅広く担当。<br>
+        現在はフリーランスとして活動中。
+      </p>
+    </div>
+    <div class="grid-cell" style="animation-delay:0.2s">
+      <p class="cell-number">02</p>
+      <h3 class="cell-title">得意なこと</h3>
+      <p class="cell-body">
+        UIコンポーネントの設計・実装、<br>
+        パフォーマンス最適化、<br>
+        アクセシビリティ対応。<br>
+        デザイナーとの協業も得意です。
+      </p>
+    </div>
+    <div class="grid-cell" style="animation-delay:0.3s">
+      <p class="cell-number">03</p>
+      <h3 class="cell-title">趣味・関心</h3>
+      <p class="cell-body">
+        タイポグラフィと活字文化、<br>
+        山歩き、コーヒーの自家焙煎。<br>
+        テクノロジーと自然の<br>
+        交差点に関心があります。
+      </p>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <section class="skills-section" id="skills">
+    <div class="skills-header">
+      <h2 class="skills-title">スキル</h2>
+      <span class="skills-sub">Technologies &amp; Tools</span>
+    </div>
+    <div class="skills-list">
+      <span class="skill-tag">HTML / CSS</span>
+      <span class="skill-tag">JavaScript</span>
+      <span class="skill-tag">TypeScript</span>
+      <span class="skill-tag">React</span>
+      <span class="skill-tag">Next.js</span>
+      <span class="skill-tag">Vue.js</span>
+      <span class="skill-tag">Node.js</span>
+      <span class="skill-tag">Python</span>
+      <span class="skill-tag">Figma</span>
+      <span class="skill-tag">Git / GitHub</span>
+      <span class="skill-tag">AWS</span>
+      <span class="skill-tag">Docker</span>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <p class="contact-text">
+      このWebsiteは<br>
+      <span>AI</span>を使って生成したものです。
+    </p>
+    <div class="contact-links">
+      <a href="mailto:hello@example.com" class="contact-link">hello@example.com</a>
+      <a href="https://github.com/" target="_blank" class="contact-link">GitHub</a>
+      <a href="https://twitter.com/" target="_blank" class="contact-link">Twitter / X</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Yamada Taro. All rights reserved.</p>
+    <p>Tokyo, Japan</p>
+  </footer>
+
+</body>
+</html>
