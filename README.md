@@ -1,2 +1,2 @@
 
-## ※Claude AIを使用しています
+## Claude AIを使用したお遊び
