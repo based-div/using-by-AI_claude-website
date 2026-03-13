@@ -1,3 +1,2 @@
 
-## ※Claude AIを使用しています。
-ka
+## ※Claude AIを使用しています
