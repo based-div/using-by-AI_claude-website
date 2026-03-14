@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root[data-theme="dark"] {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8e8f0;
+    --muted: #888899;
+    --accent: #7c6fff;
+    --accent2: #3dffa8;
+    --glow1: rgba(124,111,255,0.08);
+    --glow2: rgba(61,255,168,0.05);
+    --toggle-bg: #1e1e24;
+    --toggle-border: rgba(255,255,255,0.14);
+  }
+
+  :root[data-theme="light"] {
+    --bg: #f5f5f0;
+    --surface: #ffffff;
+    --surface2: #f0f0ea;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.15);
+    --text: #18181f;
+    --muted: #666677;
+    --accent: #5b4ef0;
+    --accent2: #0a8a52;
+    --glow1: rgba(91,78,240,0.06);
+    --glow2: rgba(10,138,82,0.04);
+    --toggle-bg: #ffffff;
+    --toggle-border: rgba(0,0,0,0.15);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .glow {
+    position: fixed; top: -20vh; right: -10vw; width: 60vw; height: 60vh;
+    background: radial-gradient(ellipse, var(--glow1) 0%, transparent 70%);
+    pointer-events: none; z-index: 0; transition: background 0.3s;
+  }
+  .glow2 {
+    position: fixed; bottom: -10vh; left: -5vw; width: 40vw; height: 40vh;
+    background: radial-gradient(ellipse, var(--glow2) 0%, transparent 70%);
+    pointer-events: none; z-index: 0; transition: background 0.3s;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 24px;
+    height: 56px;
+    background: transparent;
+  }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 2px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-link {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+    text-transform: lowercase;
+  }
+  .nav-link:hover { color: var(--text); background: var(--surface2); }
+  .nav-link.active { color: var(--accent); }
+
+  .nav-sep {
+    color: var(--border2);
+    font-size: 10px;
+    user-select: none;
+  }
+
+  .toggle-wrap {
+    position: fixed; top: 14px; right: 24px; z-index: 101;
+  }
+  .toggle-btn {
+    background: var(--toggle-bg);
+    border: 1px solid var(--toggle-border);
+    border-radius: 999px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .toggle-icon { font-size: 14px; line-height: 1; }
+
+  main { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
+
+  header {
+    padding: 100px 0 64px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 64px;
+    transition: border-color 0.3s;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+  }
+  .tag::before { content: '> '; opacity: 0.5; }
+
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(36px, 8vw, 64px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 8px;
+    color: var(--text);
+    transition: color 0.3s;
+  }
+
+  .role {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    margin-bottom: 28px;
+    letter-spacing: 0.04em;
+    transition: color 0.3s;
+  }
+
+  .bio {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.8;
+    margin-bottom: 36px;
+    transition: color 0.3s;
+  }
+
+  .links { display: flex; gap: 12px; flex-wrap: wrap; }
+  .link-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 8px 18px;
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    color: var(--muted);
+    text-decoration: none;
+    cursor: pointer;
+    background: transparent;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .link-btn:hover { color: var(--text); border-color: var(--accent); background: rgba(124,111,255,0.06); }
+  .link-btn.primary { border-color: var(--accent); color: var(--accent); }
+  .link-btn.primary:hover { background: rgba(124,111,255,0.12); }
+
+  section { margin-bottom: 64px; }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex; align-items: center; gap: 12px;
+    transition: color 0.3s;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); transition: background 0.3s; }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .skill-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    transition: border-color 0.2s, background 0.3s;
+  }
+  .skill-group:hover { border-color: var(--border2); }
+  .skill-group-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-tag {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--surface2);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-family: 'Space Mono', monospace;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .projects { display: flex; flex-direction: column; gap: 16px; }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex; gap: 20px; align-items: flex-start;
+    transition: border-color 0.2s, background 0.3s;
+    cursor: pointer;
+  }
+  .project-card:hover { border-color: var(--accent); background: rgba(124,111,255,0.03); }
+  .project-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--border2);
+    min-width: 36px;
+    line-height: 1;
+    padding-top: 2px;
+    transition: color 0.2s;
+  }
+  .project-card:hover .project-num { color: var(--accent); }
+  .project-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    transition: color 0.3s;
+  }
+  .project-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 12px; transition: color 0.3s; }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stack-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    border: 1px solid rgba(61,255,168,0.2);
+    border-radius: 3px;
+    padding: 2px 8px;
+    transition: color 0.3s;
+  }
+
+  .contact-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .contact-box h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: var(--text);
+    transition: color 0.3s;
+  }
+  .contact-box p { font-size: 14px; color: var(--muted); margin-bottom: 28px; transition: color 0.3s; }
+  .email {
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(124,111,255,0.3);
+    padding-bottom: 2px;
+    transition: color 0.3s;
+  }
+  .email:hover { border-color: var(--accent); }
+
+  .cursor { display: inline-block; width: 2px; height: 1em; background: var(--accent2); margin-left: 2px; animation: blink 1s step-end infinite; vertical-align: text-bottom; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  header { animation: fadeUp 0.6s ease both; }
+  section:nth-child(1) { animation: fadeUp 0.6s ease 0.1s both; }
+  section:nth-child(2) { animation: fadeUp 0.6s ease 0.2s both; }
+  section:nth-child(3) { animation: fadeUp 0.6s ease 0.3s both; }
+
+  @media (max-width: 520px) { h1 { font-size: 40px; } .toggle-wrap { display: none; } }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="glow2"></div>
+
+<nav>
+  <div class="nav-links">
+    <a class="nav-link active" href="#">home</a>
+    <span class="nav-sep">/</span>
+    <a class="nav-link" href="#">works</a>
+    <span class="nav-sep">/</span>
+    <a class="nav-link" href="#">about</a>
+  </div>
+</nav>
+
+<div class="toggle-wrap">
+  <button class="toggle-btn" onclick="toggleTheme()">
+    <span class="toggle-icon" id="toggleIcon">☀️</span>
+    <span id="toggleLabel">light</span>
+  </button>
+</div>
+
+<main>
+  <header>
+    <p class="tag">portfolio · 2025</p>
+    <h1>Yamada<br>Taro</h1>
+    <p class="role">// Full-Stack Engineer</p>
+    <p class="bio">
+      Webアプリケーションの設計から実装まで幅広く手がけるエンジニアです。
+      ユーザー体験とコードの品質を大切にし、チームと協力しながらプロダクトを育てることが好きです。
+    </p>
+    <div class="links">
+      <a class="link-btn primary" href="#">GitHub</a>
+      <a class="link-btn" href="#">LinkedIn</a>
+      <a class="link-btn" href="#">Twitter</a>
+      <a class="link-btn" href="#">Resume PDF</a>
+    </div>
+  </header>
+
+  <section>
+    <p class="section-label">Skills</p>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <p class="skill-group-name">Frontend</p>
+        <div class="skill-tags">
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">Next.js</span>
+          <span class="skill-tag">CSS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-name">Backend</p>
+        <div class="skill-tags">
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Go</span>
+          <span class="skill-tag">REST / GraphQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-name">Infra</p>
+        <div class="skill-tags">
+          <span class="skill-tag">AWS</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">Terraform</span>
+          <span class="skill-tag">GitHub Actions</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-name">Data</p>
+        <div class="skill-tags">
+          <span class="skill-tag">PostgreSQL</span>
+          <span class="skill-tag">Redis</span>
+          <span class="skill-tag">Elasticsearch</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Projects</p>
+    <div class="projects">
+      <div class="project-card">
+        <span class="project-num">01</span>
+        <div>
+          <p class="project-name">OSS CLI Tool</p>
+          <p class="project-desc">開発ワークフローを自動化する CLI ツール。GitHub Stars 1.2k+。</p>
+          <div class="project-stack">
+            <span class="stack-tag">Go</span>
+            <span class="stack-tag">Cobra</span>
+            <span class="stack-tag">GitHub API</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card">
+        <span class="project-num">02</span>
+        <div>
+          <p class="project-name">Real-time Dashboard</p>
+          <p class="project-desc">WebSocket を活用したリアルタイム分析ダッシュボード。1,000 同時接続を実現。</p>
+          <div class="project-stack">
+            <span class="stack-tag">React</span>
+            <span class="stack-tag">WebSocket</span>
+            <span class="stack-tag">D3.js</span>
+            <span class="stack-tag">Rust</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card">
+        <span class="project-num">03</span>
+        <div>
+          <p class="project-name">AI Code Reviewer</p>
+          <p class="project-desc">LLM を活用したコードレビュー自動化ツール。チームのレビュー時間を 30% 削減。</p>
+          <div class="project-stack">
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">Claude API</span>
+            <span class="stack-tag">FastAPI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Contact</p>
+    <div class="contact-box">
+      <h3>一緒に何か作りませんか<span class="cursor"></span></h3>
+      <p>新しいプロジェクトや機会について、お気軽にご連絡ください。</p>
+      <a class="email" href="mailto:hello@example.com">hello@example.com</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('toggleIcon').textContent = isDark ? '🌙' : '☀️';
+    document.getElementById('toggleLabel').textContent = isDark ? 'dark' : 'light';
+  }
+</script>
+</body>
+</html>
